@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+    <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+    
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+      }
+
+      #map {
+        height: 100%;
+        width: 100%;
+      }
+      
+     
+      div.cartodb-popup.v2 div.cartodb-popup-content-wrapper {
+        background: slategrey;
+        color: slategrey;
+      }
+      
+      div.cartodb-popup.v2:before {
+        border-top-color: slategrey;
+        
+      }
+        
+
+        
+        div.cartodb-popup-close-button {
+            position:fixed;
+            top: -10px;
+            right: -10px;
+            width: 26px;
+            height: 26px;
+            background: url('http://libs.cartodb.com/cartodb.js/v3/themes/img/light.png') no-repeat 0 -23px;
+            text-indent: -9999px;
+            font-size: 0;
+            line-height: 0;
+            opacity: 1;
+            text-transform: uppercase;
+            z-index: 3;
+    
+        }
+      
+      div.cartodb-popup p {
+        color: white;
+        
+      }
+    </style>
+
+   
+    <script type="infowindow/html" id="infowindow_template">
+      <div class="cartodb-popup v2">
+        <a href="#close" class="cartodb-popup-close-button close">x</a>
+         <div class="cartodb-popup-content-wrapper">
+           <div>{{availabili}}</div>
+           
+           <div class="cartodb-popup-content">
+           
+           <iframe width="560" height="315" src="https://www.youtube.com/embed/xQfXcvNXx5s" frameborder="0" allowfullscreen></iframe>
+             
+           </div>
+         </div>
+         <div class="cartodb-popup-tip-container"></div>
+      </div>
+    </script>
+
+    <script>
+      $(document).ready(function () {
+        cartodb.createVis('map', 'https://alexajensen.cartodb.com/api/v2/viz/bb0bff44-d8c6-11e5-b836-0e5db1731f59/viz.json')
+          .done(function (vis, layers) {
+            var dataLayer = layers[1].getSubLayer(0);
+         dataLayer.infowindow.set('sanitizeTemplate', 'false');
+            dataLayer.infowindow.set('template', $('#infowindow_template').html());
+            
+            cartodb.createLayer(map, layerUrl)
+       .addTo(map)
+       .on('done', function(layer) {
+        
+
+  var subLayerOptions = {
+      sql: "SELECT * FROM airbnb where pop_other::float > 1000000",
+      cartocss: "#airbnb{marker-fill: #109DCD; marker-width: 5; marker-line-color: white; marker-line-width: 0;}"
+        }
+
+  var sublayer = layer.getSubLayer(0);
+  sublayer.set(subLayerOptions);
+
+  sublayer.infowindow.set('template', $('#infowindow_template').html());
+        
+  sublayer.on('featureClick', function(e, latlng, pos, data) {
+          alert("Hey! You clicked " + data.cartodb_id);
+    });
+  }).on('error', function() 
+        
+        {
+       
+});
+
+          });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="map"></div>
+  </body>
+</html>
